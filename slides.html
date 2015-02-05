@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Docker for DEVs</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+  <body>
+    <textarea id="source">
+name: inverse
+layout: false
+class: center, middle, inverse
+
+# Docker for DEVs
+by George Sun
+
+---
+layout: true
+class: inverse
+---
+.left-column[# Agenda]
+.right-column[
+* Who're you?
+* Where're you come from?
+* Where will you go?
+]
+
+---
+.left-column[# What's Docker?]
+.right-column[
+* Open platform for developers and sysadmins to build, ship, and run distributed applications.
+
+* Light weight containers
+
+* Available on most linux distros
+]
+
+---
+
+# VM vs. Docker
+
+<br>
+<br>
+<br>
+.right[![image](images/vm.png) ![image](images/docker_vm.png)]
+
+---
+# Images vs. Containers
+
+.right[![Left-aligned image](images/images_containers.png)]
+
+---
+# Why You Should Care?
+
+.right-column[
+* It's super fast
+
+* Minimal overhead/resource usage
+
+* Run thousands of containers
+
+* Easy to run your whole production stack locally
+]
+
+---
+# What If I Have a OS X?
+
+.right-column[
+### Boot2Docker comes to rescue!
+]
+
+---
+# Architecture
+
+.right-column[
+.center[![image](images/architecture.svg)]
+]
+
+---
+# How Do I Use It?
+
+.right-column[
+.center[![image](images/docker-flow.png)]
+]
+
+---
+# What We've Learned So Far?
+
+.right-column[
+* Container - Light weight virtualization
+
+* Image - Immutable snapshot of a container
+
+* Hub/Index- Central hub for sharing images
+]
+
+---
+# Docker Command Line Example
+<br>
+<br>
+
+```
+$ docker login
+
+$ docker pull puffsun/postgres
+
+$ docker run -d -t puffsun/postgres
+```
+
+---
+# How to Run Containers?
+<br>
+<br>
+
+```
+$ docker run -i -t debian /bin/bash
+
+$ docker run -d -t postgres
+
+$ docker run -d -t postgres:9.3
+```
+
+---
+# Manipulating Containers
+<br>
+<br>
+
+```
+$ docker ps
+
+CONTAINER ID  IMAGE      COMMAND   CREATED        STATUS
+
+d03ba4afb47c  debian:7.5 /bin/bash 10 seconds ago Up 9 seconds
+
+
+$ docker logs d03ba4afb47c
+
+$ docker stop d03ba4afb47c
+
+$ docker kill d03ba4afb47c
+
+$ docker start d03ba4afb47c
+```
+
+---
+# Images - Manual Creation
+<br>
+<br>
+
+```
+$ docker run -i -t debian /bin/bash
+
+root@container:/$ apt-get install postgresql-9.3
+
+$ docker ps
+
+$ docker diff <CID>
+
+$ docker commit <CID> username/postgresql
+```
+
+---
+# Hub
+
+<br>
+<br>
+```
+$ docker login
+
+$ docker push username/postgresql
+
+$ ssh another-dev-machine
+
+$ docker pull username/postgresql
+```
+
+---
+# Image - Dockerfile
+<br>
+<br>
+
+```
+FROM ruby
+
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
+
+RUN mkdir /myapp
+
+WORKDIR /myapp
+
+ADD Gemfile /myapp/Gemfile
+
+RUN bundle install
+
+ADD . /myapp
+```
+
+---
+# Dockerfile
+<br>
+<br>
+
+```
+$ docker build -t postgres .
+```
+
+---
+# Recap
+.right-column[
+Run containers: `docker run`
+
+Build images manually: `docker commit`
+
+Use Dockerfiles for building images
+
+]
+
+---
+class: center middle
+# How Does Docker Fit into Your DEV ENV
+
+---
+# DEV Flow
+
+<br>
+<br>
+
+```
+$ docker run -d -t postgresql
+
+$ psql -U postgres -h localhost -c"CREATE DATABASE mydb WITH OWNER myuser;"
+
+$ python manage.py syncdb
+```
+
+---
+# What About Ports?
+
+<br>
+<br>
+
+```
+$ docker run -d -p 5432:5432 -t postgresql
+
+"-p host_port:container_port"
+```
+
+---
+# What About Data?
+
+<br>
+<br>
+
+```
+$ docker run -d -p 5432:5432 -v /data:/var/lib/postgresql -t postgresql
+
+"-v host_dir:container_dir"
+```
+
+---
+class: center, middle
+# Everyone on The Team Runs The Same Database, Cache, etc.
+
+---
+# Running Your Web App in A Container
+
+.right-column[
+* Simplify runtime
+
+* Make sure everyone runs the same version of deps
+
+* New Hires Can Built DEV ENV Quickly
+]
+
+---
+# Container Links
+<br>
+<br>
+```
+$ docker run -d --name pg -t postgresql
+
+$ docker run -d -p 8000:8000 --link pg:database -t django_app
+
+"--link pg:database"
+
+root@f9e4e78c60c6:/$ cat /etc/hosts
+
+172.17.0.9  database
+root@f9e4e78c60c6:/# export
+DATABASE_PORT="tcp://172.17.0.9:5432"
+DATABASE_PORT_5432_TCP="tcp://172.17.0.9:5432"
+DATABASE_PORT_5432_TCP_ADDR="172.17.0.9"
+DATABASE_PORT_5432_TCP_PORT="5432"
+DATABASE_PORT_5432_TCP_PROTO="tcp"
+```
+
+---
+# Fig
+
+https://github.com/docker/fig
+
+```
+web:
+  image: django-webapp
+  command: python app.py
+  links:
+   - db
+   - redis
+   - memcached
+  ports:
+   - "8000:8000"
+db:
+  image: denibertovic/postgres
+redis:
+  image: username/redis
+memcached:
+  image: otheruser/memcahced
+```
+
+# THEN RUN
+fig up
+
+
+---
+class: center middle
+# Build Once and Run Anywhere
+
+
+---
+class: center, middle
+#Thanks
+
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
