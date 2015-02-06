@@ -282,10 +282,12 @@ $ ruby manage.rb syncdb
 ```
 $ docker run -d --name pg -t postgresql
 
-$ docker run -d -p 8000:8000 --link pg:database -t django_app
+$ docker run -d -p 8000:8000 --link pg:database -t sinatra_webapp
+```
 
-"--link pg:database"
-
+### Syntax:
+`--link pg:database`
+```shell
 root@f9e4e78c60c6:/$ cat /etc/hosts
 
 172.17.0.9  database
