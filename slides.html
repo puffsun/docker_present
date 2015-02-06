@@ -13,7 +13,7 @@ class: center, middle, inverse
 
 # Docker for DEVs
 
-by George Sun
+### by George Sun
 
 ---
 layout: true
@@ -262,7 +262,7 @@ $ ruby manage.rb syncdb
 ### Syntax:
 `-v host_dir:container_dir`
 
-### Everyone on the team runs the same database, config, etc.
+### Everyone on the team runs the same database, configuration, dependencies, etc.
 
 ---
 # Running Your Web App in A Container
@@ -272,7 +272,7 @@ $ ruby manage.rb syncdb
 
 * Make sure everyone runs the same version of deps
 
-* New Hires Can Built DEV ENV Quickly
+* New hires can built DEV ENV quickly
 ]
 
 ---
@@ -302,7 +302,7 @@ DATABASE_PORT_5432_TCP_PROTO="tcp"
 ---
 # Automation
 
-Rake, Make, or any other build systems you prefer.
+### Rake, Make, or any other build systems you prefer.
 
 ```ruby
 require 'rake'
@@ -327,8 +327,7 @@ end
 ---
 # Docker Remote API
 
-Ruby implementation, RESTful:
-https://github.com/swipely/docker-api
+### Ruby impl: https://github.com/swipely/docker-api
 
 ```ruby
 require 'docker'
@@ -355,7 +354,7 @@ container.top
 ---
 # Fig
 
-https://github.com/docker/fig  (it's YAML syntax)
+### https://github.com/docker/fig  (it's YAML syntax)
 
 ```yaml
 web:
@@ -376,8 +375,7 @@ memcached:
 ```
 --
 
-### \# Then Run:
-`$ fig up`
+### Then Run: `$ fig up`
 
 ---
 #Summary
