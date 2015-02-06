@@ -12,6 +12,7 @@ layout: false
 class: center, middle, inverse
 
 # Docker for DEVs
+
 by George Sun
 
 ---
@@ -28,7 +29,8 @@ class: inverse
 ]
 
 ---
-.left-column[# What's Docker?]
+.left-column[# What is Docker?]
+
 .right-column[
 * Open platform for developers and sysadmins to build, ship, and run distributed applications.
 
@@ -225,21 +227,17 @@ Use Dockerfiles for building images
 ]
 
 ---
-class: center middle
-# How Does Docker Fit into Your DEV ENV
-
----
-# DEV Flow
+# Docker in DEV Flow
 
 <br>
 <br>
 
 ```
-$ docker run -d -t postgresql
+$ docker run -d -p 5432:5432 -v `pwd`/_pgdata:/var/lib/postgres -t postgres
 
 $ psql -U postgres -h localhost -c"CREATE DATABASE mydb WITH OWNER myuser;"
 
-$ python manage.py syncdb
+$ ruby manage.rb syncdb
 ```
 
 ---
@@ -248,11 +246,11 @@ $ python manage.py syncdb
 <br>
 <br>
 
-```
-$ docker run -d -p 5432:5432 -t postgresql
+`$ docker run -d -p 5432:5432 -t postgresql`
 
-"-p host_port:container_port"
-```
+### Syntax:
+
+`-p host_port:container_port`
 
 ---
 # What About Data?
@@ -260,15 +258,11 @@ $ docker run -d -p 5432:5432 -t postgresql
 <br>
 <br>
 
-```
-$ docker run -d -p 5432:5432 -v /data:/var/lib/postgresql -t postgresql
+`$ docker run -d -p 5432:5432 -v /data:/var/lib/postgresql -t postgresql`
+### Syntax:
+`-v host_dir:container_dir`
 
-"-v host_dir:container_dir"
-```
-
----
-class: center, middle
-# Everyone on The Team Runs The Same Database, Cache, etc.
+### Everyone on the team runs the same database, config, etc.
 
 ---
 # Running Your Web App in A Container
@@ -304,14 +298,67 @@ DATABASE_PORT_5432_TCP_PROTO="tcp"
 ```
 
 ---
+# Automation
+
+Rake, Make, or any other build systems you prefer.
+
+```ruby
+require 'rake'
+require 'docker'
+
+desc 'Download the necessary base images'
+task :unpack do
+%w(registry busybox scratch debian:wheezy).each do |image|
+  system "docker pull #{image}"
+end
+end
+
+desc 'Pull an Ubuntu image'
+image 'ubuntu:14.04' do
+  puts "Pulling ubuntu:14.04"
+  image = Docker::Image.create('fromImage' => 'ubuntu',\
+    'tag' => '14.04')
+  puts "Pulled ubuntu:13.10, image id: #{image.id}"
+end
+```
+
+---
+# Docker Remote API
+
+Ruby implementation, RESTful:
+https://github.com/swipely/docker-api
+
+```ruby
+require 'docker'
+
+# Create a Container.
+container = Docker::Container.create('Cmd' => ['ls'],\
+    'Image' => 'base')
+# Get more information about the Container.
+container.json
+# Start running the Container.
+container.start
+# Stop running the Container.
+container.stop
+# Restart the Container.
+container.restart
+# Kill the command running in the Container.
+container.kill
+# Kill the Container specifying the kill signal.
+container.kill(:signal => "SIGHUP")
+# Return the currently executing processes in a Container.
+container.top
+```
+
+---
 # Fig
 
-https://github.com/docker/fig
+https://github.com/docker/fig  (it's YAML syntax)
 
-```
+```yaml
 web:
-  image: django-webapp
-  command: python app.py
+  image: sinatra-webapp
+  command: ruby app.rb
   links:
    - db
    - redis
@@ -319,20 +366,30 @@ web:
   ports:
    - "8000:8000"
 db:
-  image: denibertovic/postgres
+  image: puffsun/postgres
 redis:
-  image: username/redis
+  image: puffsun/redis
 memcached:
-  image: otheruser/memcahced
+  image: sung2/memcahced
 ```
 --
 
-### Then Run:
-`fig up`
+### \# Then Run:
+`$ fig up`
 
 ---
-class: center middle
-# Build Once and Run Anywhere
+#Summary
+.right-column[
+* Uses the same ENV everywhere
+
+* Run the production stack in DEV
+
+* Upgrade separate components easily
+
+* Simplify deployment
+
+* Bring new team members to the team more easily, they only need to pull down the images that been setup by DEV Ops
+]
 
 
 ---
