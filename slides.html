@@ -20,9 +20,11 @@ class: inverse
 ---
 .left-column[# Agenda]
 .right-column[
-* Who're you?
-* Where're you come from?
-* Where will you go?
+* What is Docker?
+
+* Basic Usage.
+
+* Examples and Demo!
 ]
 
 ---
@@ -47,6 +49,7 @@ class: inverse
 ---
 # Images vs. Containers
 
+<br>
 .right[![Left-aligned image](images/images_containers.png)]
 
 ---
@@ -65,8 +68,9 @@ class: inverse
 ---
 # What If I Have a OS X?
 
+<br>
 .right-column[
-### Boot2Docker comes to rescue!
+ Boot2Docker comes to rescue!
 ]
 
 ---
@@ -102,9 +106,9 @@ class: inverse
 ```
 $ docker login
 
-$ docker pull puffsun/postgres
+$ docker pull rails
 
-$ docker run -d -t puffsun/postgres
+$ docker run -d -t rails
 ```
 
 ---
@@ -113,7 +117,7 @@ $ docker run -d -t puffsun/postgres
 <br>
 
 ```
-$ docker run -i -t debian /bin/bash
+$ docker run -i -t rails /bin/bash
 
 $ docker run -d -t postgres
 
@@ -148,7 +152,7 @@ $ docker start d03ba4afb47c
 <br>
 
 ```
-$ docker run -i -t debian /bin/bash
+$ docker run -i -t ubuntu /bin/bash
 
 root@container:/$ apt-get install postgresql-9.3
 
@@ -156,7 +160,7 @@ $ docker ps
 
 $ docker diff <CID>
 
-$ docker commit <CID> username/postgresql
+$ docker commit -m 'Postgres installed' <CID> username/postgresql
 ```
 
 ---
@@ -167,11 +171,11 @@ $ docker commit <CID> username/postgresql
 ```
 $ docker login
 
-$ docker push username/postgresql
+$ docker push puffsun/postgresql
 
 $ ssh another-dev-machine
 
-$ docker pull username/postgresql
+$ docker pull puffsun/postgresql
 ```
 
 ---
@@ -182,17 +186,23 @@ $ docker pull username/postgresql
 ```
 FROM ruby
 
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
+RUN apt-get update
 
-RUN mkdir /myapp
+RUN apt-get install -y build-essential nodejs git-core
 
-WORKDIR /myapp
+RUN mkdir /source
 
-ADD Gemfile /myapp/Gemfile
+WORKDIR /source
+
+RUN git clone https://github.com/Thibaut/devdocs.git
+
+WORKDIR /source/devdocs
 
 RUN bundle install
 
-ADD . /myapp
+CMD ['thor', 'docs:download', '--all']
+
+EXPOSE 9292
 ```
 
 ---
@@ -201,7 +211,7 @@ ADD . /myapp
 <br>
 
 ```
-$ docker build -t postgres .
+$ docker build -t devdocs .
 ```
 
 ---
@@ -212,7 +222,6 @@ Run containers: `docker run`
 Build images manually: `docker commit`
 
 Use Dockerfiles for building images
-
 ]
 
 ---
@@ -316,10 +325,10 @@ redis:
 memcached:
   image: otheruser/memcahced
 ```
+--
 
-# THEN RUN
-fig up
-
+### Then Run:
+`fig up`
 
 ---
 class: center middle

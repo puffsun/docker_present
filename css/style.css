@@ -1,6 +1,6 @@
 
 body {
-    font-family: Cambria,Georgia,serif;
+    font-family: "Droid Serif", Cambria,Georgia,serif;
 }
 
 h1, h2, h3 {
@@ -8,7 +8,7 @@ h1, h2, h3 {
     font-weight: 400;
     margin-bottom: 0;
 }
-.remark-slide-content h1 { font-size: 3em; }
+.remark-slide-content h1 { font-size: 2.5em; }
 .remark-slide-content h2 { font-size: 2em; }
 .remark-slide-content h3 { font-size: 1.6em; }
 .footnote {
@@ -29,7 +29,7 @@ code {
     border-radius: 5px;
 }
 .remark-code, .remark-inline-code {
-    font-family: "Ubuntu Mono",Consolas,monaco,monospace;
+    font-family: "Droid Serif Mono",Consolas,monaco,monospace;
     font-size: 1.0em;
 }
 .remark-code-line-highlighted     { background-color: #373832; }
@@ -107,7 +107,7 @@ code {
     color: #000;
 }
 .right-column {
-    width: 75%;
+    width: 85%;
     float: right;
     padding-top: 1em;
     font-size: 1.5em;
