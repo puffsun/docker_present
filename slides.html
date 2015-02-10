@@ -237,9 +237,11 @@ Use Dockerfiles for building images
 <br>
 
 ```
-$ docker run -d -p 5432:5432 -v `pwd`/_pgdata:/var/lib/postgres -t postgres
+$ docker run -d -p 5432:5432\
+    -v `pwd`/_pgdata:/var/lib/postgres -t postgres
 
-$ psql -U postgres -h localhost -c"CREATE DATABASE mydb WITH OWNER myuser;"
+$ psql -U postgres -h localhost\
+    -c"CREATE DATABASE mydb WITH OWNER myuser;"
 
 $ ruby manage.rb syncdb
 ```
@@ -331,7 +333,7 @@ end
 ---
 # Docker Remote API
 
-### Ruby impl: https://github.com/swipely/docker-api
+### https://github.com/swipely/docker-api
 
 ```ruby
 require 'docker'
